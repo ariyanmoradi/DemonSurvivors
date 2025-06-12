@@ -1,2 +1,2 @@
 # DemonSurvivors
-A simple infinite map game, Vampire-Survivors-like.
+A simple infinite map survival game.
