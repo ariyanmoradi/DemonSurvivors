@@ -1,3 +1,6 @@
+-- main.lua
+local anim8 = require 'libraries.anim8'  -- Require the anim8 library
+local sprites = require("sprites")
 local backgroundWidth, backgroundHeight
 local scrollSpeed = 120
 local offsetX, offsetY = 0, 0
@@ -8,17 +11,22 @@ local mapVisible = true
 local player = {}
 local playerX, playerY = 0, 0
 
+-- Initialize enemy variables
+
 function love.load()
-    love.window.setFullscreen(true)
-    background = love.graphics.newImage('sprites/map/map.png')
+    love.window.setFullscreen(true) 
     
     -- Initialize the player table first
-    player.sprite = love.graphics.newImage('sprites/lex/lex_neutral.png')
     player.width = 5
     player.height = 5
+    player.animations = {}  -- Initialize the animations table
 
-    backgroundWidth = background:getWidth()
-    backgroundHeight = background:getHeight()
+    -- Load sprites and initialize player
+    sprites.load(player)
+
+    -- Access the background from the sprites table
+    backgroundWidth = sprites.background:getWidth()
+    backgroundHeight = sprites.background:getHeight()
 
     local screenWidth, screenHeight = love.graphics.getDimensions()
 
@@ -46,6 +54,7 @@ function love.update(dt)
     -- Update the camera offset instead of player position
     offsetX = (offsetX + moveX) % backgroundWidth
     offsetY = (offsetY + moveY) % backgroundHeight
+
 end
 
 function love.draw()
@@ -61,15 +70,14 @@ function love.draw()
         -- Draw the background in a way that ensures it stays visible
         for i = -1, tilesX do
             for j = -1, tilesY do
-                love.graphics.draw(background, 
+                love.graphics.draw(sprites.background, 
                     (i * backgroundWidth) - offsetX, 
                     (j * backgroundHeight) - offsetY)
             end
         end
     end                                                                                                                               
-                                                                                                                                      
-    -- Draw the player sprite at the center of the screen                                                                                                         
-    local screenWidth, screenHeight = love.graphics.getDimensions()
-    love.graphics.draw(player.sprite, (screenWidth - player.width) / 2, (screenHeight - player.height) / 2)                                                                                       
+    
+    love.graphics.draw(player.sprite, playerX, playerY) -- Draw the player sprite at the correct position
+
 end
 
